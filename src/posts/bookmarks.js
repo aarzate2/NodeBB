@@ -1,27 +1,20 @@
 'use strict';
 
-const { parse } = require('ipaddr.js');
 const db = require('../database');
 const plugins = require('../plugins');
 
 module.exports = function (Posts) {
-	Posts.bookmark = async function (pid, uid) {
-		return await toggleBookmark('bookmark', pid, uid);
-	};
+	Posts.bookmark = async (pid, uid) => toggleBookmark(true, pid, uid);
+    Posts.unbookmark = async (pid, uid) => toggleBookmark(false, pid, uid); 
 
-	Posts.unbookmark = async function (pid, uid) {
-		return await toggleBookmark('unbookmark', pid, uid);
-	};
+	
 
-	function isValidUid(uid) {
-		return parseInt(uid, 10) > 0;
-	}
 	async function toggleBookmark(type, pid, uid) {
-		if (!isValidUid(uid)) {
+		if (parseInt(uid, 10) <= 0) {
 			throw new Error('[[error:not-logged-in]]');
 		}
 
-		const isBookmarking = type === 'bookmark';
+		const isBookmarking = type;
 
 		const [postData, hasBookmarked] = await Promise.all([
 			Posts.getPostFields(pid, ['pid', 'uid']),
@@ -59,7 +52,7 @@ module.exports = function (Posts) {
 	}
 
 	Posts.hasBookmarked = async function (pid, uid) {
-		if (!isValidUid(uid)) {
+		if (parseInt(uid, 10) <= 0) {
 			return Array.isArray(pid) ? pid.map(() => false) : false;
 		}
 
