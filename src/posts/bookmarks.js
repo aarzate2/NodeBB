@@ -4,10 +4,9 @@ const db = require('../database');
 const plugins = require('../plugins');
 
 module.exports = function (Posts) {
+	console.log('Anabella Arzate');
 	Posts.bookmark = async (pid, uid) => toggleBookmark(true, pid, uid);
-    Posts.unbookmark = async (pid, uid) => toggleBookmark(false, pid, uid); 
-
-	
+	Posts.unbookmark = async (pid, uid) => toggleBookmark(false, pid, uid);
 
 	async function toggleBookmark(type, pid, uid) {
 		if (parseInt(uid, 10) <= 0) {
